@@ -57,8 +57,13 @@ module TTNT
     def define_anchor_task
       desc @anchor_description
       task 'anchor' do
-        FileUtilsExt.verbose(@verbose) do
-          args = "#{ruby_opts_string} #{run_code} #{option_list} -r ttnt/anchor"
+        Rake::FileUtilsExt.verbose(@verbose) do
+          args = "#{ruby_opts_string} #{option_list} -r ttnt/anchor"
+
+          # FIXME: For some reason needs this $LOAD_PATH injection...
+          gem_root = File.expand_path('../..', __FILE__)
+          args += " -I#{gem_root}"
+
           # Since Rake::TestTask#file_list does not glob @pattern
           test_files = file_list.map { |fn| Rake::FileList[fn] }.flatten.uniq
           test_files.each do |test_file|
