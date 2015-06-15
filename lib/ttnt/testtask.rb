@@ -42,13 +42,22 @@ module TTNT
         target_sha = ENV['TARGET_SHA'] || repo.head.target_id
         base_sha = ENV['BASE_SHA'] || repo.merge_base(target_sha, repo.rev_parse('master'))
         ts = TTNT::TestSelector.new(repo, target_sha, base_sha)
-        tests = ts.select_tests
+        tests = ts.select_tests.select { |f| File.exist?(f) }
         if tests.empty?
           STDERR.puts 'No test selected.'
-        else
-          # TODO: actually run tests
-          tests.each do |test|
-            puts test
+          exit
+        end
+        Rake::FileUtilsExt.verbose(@verbose) do
+          args =
+            "#{ruby_opts_string} #{run_code} " +
+            "#{tests.to_a.join(' ')} #{option_list}"
+          ruby args do |ok, status|
+            if !ok && status.respond_to?(:signaled?) && status.signaled?
+              raise SignalException.new(status.termsig)
+            elsif !ok
+              fail "Command failed with status (#{status.exitstatus}): " +
+                "[ruby #{args}]"
+            end
           end
         end
       end
