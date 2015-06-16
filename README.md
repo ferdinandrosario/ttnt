@@ -84,7 +84,7 @@ Rake::TestTask.new { |t|
 }
 ```
 
-This will define 2 rake tasks `ttnt:my_test_name:anchor` and `ttnt:my_test_name:run`.
+This will define 2 rake tasks `ttnt:my_test_name:anchor` and `ttnt:my_test_name:run` (portion of `my_test_name` depends on the name you specify for your `Rake::TestTask`).
 Usage for those tasks are described later in this document.
 
 ## Requirements
@@ -98,7 +98,7 @@ Developed and only tested under ruby version 2.2.1.
 If you defined TTNT rake task as described above, you can run following command to produce test-to-code mapping:
 
 ```
-$ rake ttnt:test:anchor
+$ rake ttnt:my_test_name:anchor
 ```
 
 ### Select tests
@@ -106,7 +106,7 @@ $ rake ttnt:test:anchor
 If you defined TTNT rake task as described above, you can run following command to run selected tests.
 
 ```
-$ rake ttnt:test:run
+$ rake ttnt:my_test_name:run
 ```
 
 ## Development
