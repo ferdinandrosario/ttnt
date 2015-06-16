@@ -8,9 +8,12 @@ module TTNT
       @@instances
     end
 
+    def self.find_by_name(name)
+      @@instances.select { |i| i.name == name }.first
+    end
+
     def initialize(rake_test_task)
-      # TODO: regard `rake_test_task.name` and define TTNT tasks according it
-      TTNT::TaskHelper.define_tasks
+      TTNT::TaskHelper.define_tasks(rake_test_task.name)
 
       attributes = rake_test_task.instance_variables
       attributes.map! { |attribute| attribute[1..-1] }
